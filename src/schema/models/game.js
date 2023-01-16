@@ -8,21 +8,11 @@ const schema = new mongoose.Schema({
         unique: true,
         minlength: 5
     },
-    phone: {
+    iconURL: {
         type: String,
-        minlength: 5
-    },
-    street: {
-        type: String,
-        required: true,
-        minlength: 5
-    },
-    city: {
-        type: String,
-        required: true,
         minlength: 5
     }
 })
 
 schema.plugin(uniqueValidator)
-export default mongoose.model('Person', schema, "Users")
+export default mongoose.model('Game', schema, "Games")

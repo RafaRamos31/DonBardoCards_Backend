@@ -1,7 +1,9 @@
 import Card from "../models/card.js";
 import Game from "../models/game.js";
 import { gql, UserInputError } from "apollo-server";
-import { findCards } from "../../controllers/cardsController.js";
+import { findCards } from "../../controllers/cardController.js";
+import { getDateString } from "../../utilities/timeUtilities.js";
+import { getDefaultGame } from "../../controllers/gameController.js";
 
 export const cardTypes = gql`
   enum Rarity {
@@ -34,6 +36,7 @@ export const cardTypes = gql`
     game: Game!
     rarity: Rarity!
     fragments: Int!
+    command: String!
     limited: Limited
     stackable: Stackable
     cooldown: Cooldown
@@ -47,79 +50,96 @@ export const cardTypes = gql`
   extend type Mutation {
     createCard(
       name: String!
-      gameId: ID!
+      gameId: ID
       rarity: Rarity!
       fragments: Int!
+      command: String!
       existences: Int
       timeEffect: Boolean
       secondsEffect: Int
       secondsCooldown: Int
       addStackCooldown: Boolean
       stackSecondsApport: Int
-      cooldownFinishAt: String
     ): Card
   }
 `;
 
 export const cardResolvers = {
   Query: {
-    allCards: async () => Card.find({}).populate('game'),
-    findCards: async (root, args) => await findCards(args.gameId, args.rarity, args.query)
+    allCards: async () => Card.find({}).populate("game"),
+    findCards: async (root, args) =>
+      await findCards(args.gameId, args.rarity, args.query),
   },
   Mutation: {
     createCard: async (root, args) => {
-      let game
-      try{
-        game = await Game.findById(args.gameId)
-        if(!game) return UserInputError('Juego no encontrado')
-      } catch (error){
-        return new UserInputError('El identificador del juego no cumple el formato utilizado')
+      let game;
+      if(args.gameId != null){
+        try {
+          game = await Game.findById(args.gameId);
+          if (!game) return UserInputError("Juego no encontrado");
+        } catch (error) {
+          return new UserInputError(
+            "El identificador del juego no cumple el formato utilizado"
+          );
+        }
+      }
+      else{
+        game = await getDefaultGame()
       }
 
-      const card = new Card({ 
+      const card = new Card({
         name: args.name,
         game: game,
         rarity: args.rarity,
         fragments: args.fragments,
+        command: args.command,
         limited: handleLimited(args.existences),
         stackable: handleStackable(args.timeEffect, args.secondsEffect),
         cooldown: handleCooldown(
-          args.secondsCooldown, args.addStackCooldown, args.stackSecondsApport, args.cooldownFinishAt
-        )
+          args.secondsCooldown,
+          args.addStackCooldown,
+          args.stackSecondsApport
+        ),
       });
       return card.save();
     },
   },
 };
 
-function handleLimited(existences){
-  if(existences){
+function handleLimited(existences) {
+  if (existences) {
     return {
-      existences
-    }
+      existences,
+    };
   }
-  return null
+  return null;
 }
 
-function handleStackable(timeEffect, secondsEffect){
-  if(timeEffect){
+function handleStackable(timeEffect, secondsEffect) {
+  if (timeEffect) {
     return {
       timeEffect,
-      secondsEffect
-    }
+      secondsEffect,
+    };
   }
-  return null
+  return null;
 }
 
-function handleCooldown(secondsCooldown, addStackCooldown, stackSecondsApport, cooldownFinishAt){
-  if(secondsCooldown != null && addStackCooldown !=null && cooldownFinishAt !=null){
+function handleCooldown(
+  secondsCooldown,
+  addStackCooldown,
+  stackSecondsApport
+) {
+  if (
+    secondsCooldown != null &&
+    addStackCooldown != null
+  ) {
     return {
       secondsCooldown,
       addStackCooldown,
       stackSecondsApport,
-      cooldownFinishAt
-    }
+      cooldownFinishAt: getDateString(),
+    };
   }
-  return null
+  return null;
 }
-

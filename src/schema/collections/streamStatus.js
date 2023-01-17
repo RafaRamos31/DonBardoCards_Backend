@@ -3,6 +3,7 @@ import Game from "../models/game.js"
 import { gql, UserInputError } from "apollo-server";
 import { currentStatus } from "../../controllers/statusController.js";
 import LootBag from "../models/lootBag.js";
+import { getDefaultGame } from "../../controllers/gameController.js";
 
 
 export const streamTypes = gql`
@@ -50,7 +51,7 @@ export const streamResolvers = {
       let status = await currentStatus()
 
       if(args.noGame == true){
-        status.currentGame = null
+        status.currentGame = await getDefaultGame()
         return status.save()
       }
       

@@ -32,6 +32,10 @@ const schema = new mongoose.Schema({
     fixedCards: [{
         type: fixedCard,
     }],
+    twitchCommand: {
+        type: String,
+        required: true,
+    },
     channelPoints: {
         type: Number
     },

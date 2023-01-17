@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import uniqueValidator from "mongoose-unique-validator";
 
 const stackableSchema = new mongoose.Schema({
     timeEffect: {
@@ -55,6 +56,11 @@ const schema = new mongoose.Schema({
         type: Number,
         required: true,
     },
+    command: {
+        type: String,
+        unique: true,
+        required: true,
+    },
     limited: {
         type: limitedSchema,
     },
@@ -65,5 +71,5 @@ const schema = new mongoose.Schema({
         type: cooldownSchema,
     },
 })
-
+schema.plugin(uniqueValidator)
 export default mongoose.model('Card', schema, "Cards")

@@ -1,9 +1,12 @@
+import { UserInputError } from "apollo-server";
 import Reward from "../schema/models/reward.js";
+import LootBag from "../schema/models/lootBag.js"
 import { drawCards } from "../utilities/cardSelector.js";
-import { findCards, updateLimitedCard } from "./cardsController.js";
+import { findCards, updateLimitedCard } from "./cardController.js";
 import { currentStatus } from "./statusController.js";
-import { getDefaultUser, mergeNewCards } from "./userController.js";
-import { getDateString } from "../utilities/registerUtilities.js";
+import { createNewUser, getDefaultUser, mergeNewCards } from "./userController.js";
+import { getPopulatedUser } from "./userController.js";
+import { getDateString } from "../utilities/timeUtilities.js";
 
 export async function getPopulatedRewards(userId = null) {
   let queryParams = {};
@@ -28,6 +31,39 @@ export async function getPopulatedRewardById(rewardId) {
     model: "LootBag",
     populate: [{ path: "fixedGame", model: "Game" }],
   });
+}
+
+export async function createReward(username, lootBagId) {
+  let user;
+  try {
+    user = await getPopulatedUser(null, username);
+    if (!user){
+      user = await createNewUser(username)
+    } 
+  } catch (error) {
+    throw new UserInputError(
+      "El identificador del usuario no cumple el formato utilizado"
+    );
+  }
+
+  let lootBag;
+  try {
+    lootBag = await LootBag.findById(lootBagId).populate("fixedGame");
+    if (!lootBag) throw new UserInputError("Lootbag no encontrada");
+  } catch (error) {
+    throw new UserInputError(
+      "El identificador de la Lootbag no cumple el formato utilizado"
+    );
+  }
+
+  const reward = new Reward({
+    purchaserID: user.id,
+    purchaserName: user.username,
+    obtainDate: getDateString(),
+    lootBag: lootBag,
+  });
+
+  return reward.save()
 }
 
 export async function claimReward(user, lootbag) {
@@ -62,17 +98,17 @@ export async function claimReward(user, lootbag) {
 export async function createChatReward() {
   let status = await currentStatus();
 
-  if(status.giftLootbag == null){
-    return null
+  if (status.giftLootbag == null) {
+    return null;
   }
 
-  let user = await getDefaultUser()
+  let user = await getDefaultUser();
   const reward = new Reward({
     purchaserID: user.id,
     purchaserName: user.username,
     obtainDate: getDateString(),
-    lootBag: status.giftLootbag
+    lootBag: status.giftLootbag,
   });
-  reward.save()
-  return `Regalo para el Chat! Canjea este codigo para conseguir un sobre gratis: ${reward.id.toUpperCase()}`; 
+  reward.save();
+  return reward.id.toUpperCase();
 }

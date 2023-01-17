@@ -13,7 +13,7 @@ export const gameTypes = gql`
   }
 
   extend type Mutation {
-    addGame(name: String!, iconURL: String): Game
+    createGame(name: String!, iconURL: String): Game
   }
 `;
 
@@ -22,7 +22,7 @@ export const gameResolvers = {
     allGames: async () => Game.find({}),
   },
   Mutation: {
-    addGame: (root, args) => {
+    createGame: (root, args) => {
       const game = new Game({ ...args });
       return game.save();
     },

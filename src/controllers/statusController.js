@@ -1,4 +1,5 @@
 import StreamStatus from "../schema/models/streamStatus.js";
+import { getDefaultGame } from "./gameController.js";
 
 export async function currentStatus(){
   let status = await StreamStatus.findOne({ ref: 1 }).populate([{path: 'currentGame', model: 'Game'}, {path: 'giftLootbag', model: 'LootBag'}]);

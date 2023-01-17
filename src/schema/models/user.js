@@ -18,7 +18,8 @@ const statsSchema = new mongoose.Schema({
         required: true
     },
     favoriteCard: {
-        type: String
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Card'
     },
     totalOpenings: {
         type: Number,
@@ -42,7 +43,6 @@ const schema = new mongoose.Schema({
     },
     passwordHash: {
         type: String,
-        required: true,
         minlength: 5
     },
     status: {

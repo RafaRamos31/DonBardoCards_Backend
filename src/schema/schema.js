@@ -6,6 +6,7 @@ import { cardTypes, cardResolvers } from "./collections/card.js";
 import { lootBagTypes, lootBagResolvers } from "./collections/lootBag.js";
 import { streamTypes, streamResolvers } from "./collections/streamStatus.js";
 import { rewardTypes, rewardResolvers } from "./collections/reward.js";
+import { commandTypes, commandResolvers } from "./collections/command.js";
 
 const rootTypeDefs = gql`
   type Query {
@@ -25,7 +26,8 @@ export const typeDefs = [
     lootBagTypes,
     streamTypes,
     authTypes,
-    rewardTypes
+    rewardTypes,
+    commandTypes
 ]
 
 export const resolvers = [
@@ -35,5 +37,6 @@ export const resolvers = [
     lootBagResolvers,
     streamResolvers,
     authResolvers,
-    rewardResolvers
+    rewardResolvers,
+    commandResolvers
 ]

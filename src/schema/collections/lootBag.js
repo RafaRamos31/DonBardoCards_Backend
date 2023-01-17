@@ -20,6 +20,7 @@ export const lootBagTypes = gql`
     totalCards: Int!
     fixedGame: Game
     fixedCards: [FixedCard]
+    twitchCommand: String!
     channelPoints: Int
     bits: Int
   }
@@ -29,7 +30,7 @@ export const lootBagTypes = gql`
   }
 
   extend type Mutation {
-    addLootBag(
+    createLootBag(
       name: String!
       description: String!
       totalCards: Int!
@@ -46,7 +47,7 @@ export const lootBagResolvers = {
     allLootBags: async () => LootBag.find({}).populate("fixedGame"),
   },
   Mutation: {
-    addLootBag: async (root, args) => {
+    createLootBag: async (root, args) => {
       let fixedCards = null;
 
       let game;
@@ -80,6 +81,7 @@ export const lootBagResolvers = {
         fixedGame: game,
         fixedCards: fixedCards,
       });
+      lootBag.twitchCommand = `\${urlfetch ${process.env.TWITCH_BUY_URL}/buyLootBag/\${redeemer.name}/${lootBag.id}}`  
       return lootBag.save();
     },
   },

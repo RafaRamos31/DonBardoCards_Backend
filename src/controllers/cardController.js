@@ -1,6 +1,7 @@
 import Card from "../schema/models/card.js";
 import Game from "../schema/models/game.js";
 import { UserInputError } from "apollo-server";
+import { getDateString } from "../utilities/timeUtilities.js";
 
 export async function findCards(gameId = null, rarity = null, query = null) {
   let queryParams = {};
@@ -30,7 +31,7 @@ export async function findCards(gameId = null, rarity = null, query = null) {
   return Card.find(queryParams).populate("game");
 }
 
-export async function updateLimitedCard(cardId = null, quantity = 0) {
+export async function updateLimitedCard(cardId, quantity) {
   let card;
   try {
     card = await Card.findById(cardId).populate("game");
@@ -43,4 +44,15 @@ export async function updateLimitedCard(cardId = null, quantity = 0) {
   card.limited.existences = card.limited.existences - quantity
 
   return card.save();
+}
+
+export function updateCooldownCard(card, quantity){
+  let seconds = card.cooldown.secondsCooldown * quantity
+  if(card.cooldown.addStackCooldown === true){
+    seconds += card.cooldown.stackSecondsApport
+  }
+  
+  let nextUse = Date.now() + (seconds*1000)
+  card.cooldown.cooldownFinishAt = getDateString(nextUse)
+  card.save()
 }

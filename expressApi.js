@@ -16,9 +16,10 @@ export function addRestDirections(app) {
   app.get("/buyLootBag/:username/:lootBagId", async (request, response) => {
     const username = request.params.username;
     const lootBagId = request.params.lootBagId;
+    response.set('Content-Type', 'text/plain')
     try{
       let reward = await createReward(username, lootBagId);
-      response.status(200).send(`¡${username} ha comprado  ${reward.lootBag.name}!`);
+      response.status(200).send();
     }catch(error){
       response.status(400).send(error.message)
     }

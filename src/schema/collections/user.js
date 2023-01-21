@@ -1,5 +1,5 @@
 import { gql } from "apollo-server";
-import { getPopulatedUser } from "../../controllers/userController.js";
+import { loginUser, registerUser } from "../../controllers/userController.js";
 
 export const userTypes = gql`
   enum Status {
@@ -29,8 +29,27 @@ export const userTypes = gql`
     stats: UserStats!
     cards: [UserCard]!
   }
+
+  type Token {
+    value: String!
+  }
+
+  extend type Query {
+    me: User
+  }
+
+  extend type Mutation {
+    register(username: String!, password: String!): User
+    login(username: String!, password: String!): Token
+  }
 `;
 
 export const userResolvers = {
-
+  Query: {
+    me: (root, args, context) => { return context.currentUser }     
+  },
+  Mutation: {
+    register: async (root, args) => registerUser(args.username, args.password),
+    login: async (root, args) => loginUser(args.username, args.password)
+  },
 };

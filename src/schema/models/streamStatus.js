@@ -24,13 +24,21 @@ const schema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Game'
     },
+    giftLootbag: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'LootBag'
+    },
     appUsername: {
         type: String,
         required: true,
     },
-    giftLootbag: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'LootBag'
+    appUserPassword: {
+        type: String,
+        required: true,
+    },
+    appDefaultGameName: {
+        type: String,
+        required: true,
     },
     rarityWeights: [{
         type: rarityWeight,

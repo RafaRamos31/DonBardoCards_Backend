@@ -1,10 +1,5 @@
-import StreamStatus from "../models/streamStatus.js"
-import Game from "../models/game.js"
-import { gql, UserInputError } from "apollo-server";
-import { currentStatus } from "../../controllers/statusController.js";
-import LootBag from "../models/lootBag.js";
-import { getDefaultGame } from "../../controllers/gameController.js";
-
+import { gql } from "apollo-server";
+import { editStatus, getCurrentStatus, toggleStatus } from "../../controllers/statusController.js";
 
 export const streamTypes = gql`
   type RarityWeight {
@@ -21,8 +16,10 @@ export const streamTypes = gql`
     ref: Int!
     isActive: Boolean!
     currentGame: Game
-    appUsername: String!
     giftLootbag: LootBag
+    appUsername: String!
+    appUserPassword: String!
+    appDefaultGameName: String!
     rarityWeights: [RarityWeight]!
   }
 
@@ -32,55 +29,24 @@ export const streamTypes = gql`
 
   extend type Mutation {
     toggleStatus: StreamStatus!
-    changeGame(gameId: String, noGame: Boolean): StreamStatus!
-    changeDefaultLootbag(lootBagId: String): StreamStatus!
+    editStatus(
+      isActive: Boolean!,
+      currentGameId: String
+      giftLootbagId: String
+      appUsername: String!
+      appUserPassword: String!
+      appDefaultGameName: String!
+      rarityWeights: [RarityWeightInput]!
+    ): StreamStatus!
   }
 `;
 
 export const streamResolvers = {
   Query: {
-    getStatus: currentStatus,
+    getStatus: async () => getCurrentStatus(),
   },
   Mutation: {
-    toggleStatus: async (root, args) => {
-      let status = await currentStatus()
-      status.isActive = !status.isActive
-      return status.save();
-    },
-    changeGame: async (root, args) => {
-      let status = await currentStatus()
-
-      if(args.noGame == true){
-        status.currentGame = await getDefaultGame()
-        return status.save()
-      }
-      
-      let game
-      try{
-        game = await Game.findById(args.gameId)
-        if(!game) return UserInputError('Juego no encontrado')
-
-        status.currentGame = game
-        return status.save()
-
-      } catch (error){
-        return new UserInputError('El identificador del juego no cumple el formato utilizado')
-      }
-    },
-    changeDefaultLootbag: async (root, args) => {
-      let status = await currentStatus()
-
-      let lootbag
-      try{
-        lootbag = await LootBag.findById(args.lootBagId)
-        if(!lootbag) return UserInputError('Lootbag no encontrada')
-
-        status.giftLootbag = lootbag
-        return status.save()
-
-      } catch (error){
-        return new UserInputError('El identificador de la lootbag no cumple el formato utilizado')
-      }
-    }
+    toggleStatus: async (root, args) => toggleStatus(),
+    editStatus: async (root, args) => editStatus({...args}),
   },
 };

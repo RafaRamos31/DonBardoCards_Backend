@@ -1,8 +1,13 @@
-import { gql, UserInputError } from "apollo-server";
-import { claimReward, createReward, getPopulatedRewardById, getPopulatedRewards } from "../../controllers/rewardController.js";
-import { getPopulatedUser } from "../../controllers/userController.js";
+import { gql} from "apollo-server";
+import { claimReward, createNewReward, deleteReward, getAllRewards, getUserRewards } from "../../controllers/rewardController.js";
 
 export const rewardTypes = gql`
+  type RewardCard {
+    card: Card!
+    quantity: Int!
+    new: Boolean!
+  }
+
   type Reward {
     id: ID!
     purchaserID: String!
@@ -18,41 +23,19 @@ export const rewardTypes = gql`
 
   extend type Mutation {
     createReward(username: String!, lootBagId: String!): Reward
-    claimReward(userId: String!, rewardId: String!): [UserCard]
+    claimReward(userId: String!, rewardId: String!): [RewardCard]
+    deleteReward(rewardId: String!): Reward
   }
 `;
 
 export const rewardResolvers = {
   Query: {
-    allRewards: async () => getPopulatedRewards(),
-    userRewards: async (root, args) => {
-      return await getPopulatedRewards(args.userId)
-    }
+    allRewards: async () => getAllRewards(),
+    userRewards: async (root, args) => getUserRewards(args.userId)
   },
   Mutation: {
-    createReward: async (root, args) => { 
-      return await createReward(args.username, args.lootBagId)
-    },
-    claimReward: async (root, args) => {
-      let user
-      try{
-        user = await getPopulatedUser(args.userId)
-        if(!user) return UserInputError('Usuario no encontrado')
-      } catch (error){
-        throw new UserInputError('El identificador del usuario no cumple el formato utilizado')
-      }
-
-      let reward
-      try{
-        reward = await getPopulatedRewardById(args.rewardId.toLowerCase())
-        if(!reward) throw new UserInputError('Esta recompensa no existe o ya fué reclamada.')
-      } catch (error){
-        throw new UserInputError('Esta recompensa no existe o ya fué reclamada.')
-      }
-      
-      let gainedCards = await claimReward(user, reward.lootBag)
-      reward.delete()
-      return gainedCards;
-    },
+    createReward: async (root, args) => createNewReward(args.username, args.lootBagId),
+    claimReward: async (root, args) => claimReward(args.userId, args.rewardId),
+    deleteReward: async (root, args) => deleteReward(args.rewardId),
   },
 };

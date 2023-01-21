@@ -7,6 +7,7 @@ import currentAuth from "./src/utilities/currentUser.js";
 import { addRestDirections } from "./expressApi.js";
 import { startTwitchBot } from "./twitchBot.js";
 
+//Creates the Apollo Server with the GraphQL typeDefs and resolvers
 const server = new ApolloServer({
   typeDefs,
   resolvers,
@@ -14,13 +15,14 @@ const server = new ApolloServer({
   plugins: [ApolloServerPluginLandingPageDisabled()]
 });
 
+//Adding a Express Server for the required REST petitions
 let app = express();
 await server.start();
 server.applyMiddleware({ app });
 
+//Adding the REST petitions
 app = addRestDirections(app)
-app.listen({ port: 4000 }, () =>
-  console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`)
-);
+app.listen({ port: 4000 });
 
+//Turning on the Twitch bot
 startTwitchBot()

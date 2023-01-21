@@ -1,6 +1,5 @@
-import LootBag from "../models/lootBag.js";
-import Game from "../models/game.js";
-import { gql, UserInputError } from "apollo-server";
+import { gql } from "apollo-server";
+import { createNewLootbag, deleteLootBag, getAllLootbags, updateLootbag } from "../../controllers/lootbagController.js";
 
 export const lootBagTypes = gql`
   type FixedCard {
@@ -39,50 +38,27 @@ export const lootBagTypes = gql`
       channelPoints: Int
       bits: Int
     ): LootBag
+    updateLootBag(
+      id: ID!
+      name: String
+      description: String
+      totalCards: Int
+      fixedGameId: ID
+      fixedCards: [FixedCardInput]
+      channelPoints: Int
+      bits: Int
+    ): LootBag
+    deleteLootBag(lootbagId: ID!): LootBag
   }
 `;
 
 export const lootBagResolvers = {
   Query: {
-    allLootBags: async () => LootBag.find({}).populate("fixedGame"),
+    allLootBags: async () => getAllLootbags(),
   },
   Mutation: {
-    createLootBag: async (root, args) => {
-      let fixedCards = null;
-
-      let game;
-      if (args.fixedGameId != null) {
-        try {
-          game = await Game.findById(args.fixedGameId);
-          if (!game) return UserInputError("Juego no encontrado");
-        } catch (error) {
-          return new UserInputError(
-            "El identificador del juego no cumple el formato utilizado"
-          );
-        }
-      }
-
-      if (args.fixedCards != null) {
-        fixedCards = [];
-        args.fixedCards.forEach((card) => {
-          fixedCards = fixedCards.concat({
-            cardType: card.cardType,
-            quantity: card.quantity,
-          });
-        });
-      }
-
-      const lootBag = new LootBag({
-        name: args.name,
-        description: args.description,
-        totalCards: args.totalCards,
-        channelPoints: args.channelPoints,
-        bits: args.bits,
-        fixedGame: game,
-        fixedCards: fixedCards,
-      });
-      lootBag.twitchCommand = `\${urlfetch ${process.env.TWITCH_BUY_URL}/buyLootBag/\${redeemer.name}/${lootBag.id}}`  
-      return lootBag.save();
-    },
+    createLootBag: async (root, args) => createNewLootbag({...args}),
+    updateLootBag: async (root, args) => updateLootbag({...args}),
+    deleteLootBag: async (root, args) => deleteLootBag(args.lootbagId)
   },
 };

@@ -103,7 +103,7 @@ export async function claimReward(userId, rewardId) {
 
   //Determines the cards pool: all the cards, or only certain game cards (fixedGame)
   let allCards = lootbag.fixedGame ? await findCards(lootbag.fixedGame.id) : await findCards()
-  //if(allCards.length == 0) throwCustomError('Not enough existent cards', 'NOT_ENOUGH_CARDS_ERROR')
+  if(allCards.length == 0) throwCustomError('Not enough existent cards', 'NOT_ENOUGH_CARDS_ERROR')
 
   //Gets the app stored weight of every rarity type, determines the % to draw certain rarity cards
   let { rarityWeights } = await getCurrentStatus();

@@ -50,6 +50,8 @@ export async function findCardById(cardId) {
  * Creates a new Card and add it to the Database
  * @param {Object} args the paramethers for the Card creation
  * @param {String} args.name the name for the Card
+ * @param {String} args.imageURL an URL direction to a web image for the card
+ * @param {String} args.description a detailed description of the effects of the card
  * @param {String} args.gameId the Id from the game related to the card, if empty a default game is assigned
  * @param {String} args.rarity the rarity type of the card, can be 'COMMON', 'RARE', 'EPIC', 'LEGENDADY' or 'UNIQUE'
  * @param {Number} args.fragments the amount of necesary fragments to make a whole usable card
@@ -74,6 +76,8 @@ export async function createNewCard(args) {
 
   const card = new Card({
     name: args.name,
+    imageURL: args.imageURL > 0 ? args.imageURL : null,
+    description: args.description > 0 ? args.description : null,
     game: game,
     rarity: args.rarity,
     fragments: args.fragments,
@@ -95,6 +99,8 @@ export async function createNewCard(args) {
  * @param {Object} args the paramethers for the Card Update
  * @param {String} args.cardId the ID from the card to update
  * @param {String} args.name the name for the Card
+ * @param {String} args.imageURL an URL direction to a web image for the card
+ * @param {String} args.description a detailed description of the effects of the card
  * @param {String} args.gameId the Id from the game related to the card, if empty a default game is assigned
  * @param {String} args.rarity the rarity type of the card, can be 'COMMON', 'RARE', 'EPIC', 'LEGENDADY' or 'UNIQUE'
  * @param {Number} args.fragments the amount of necesary fragments to make a whole usable card
@@ -111,6 +117,8 @@ export async function updateCard(args) {
   if(!card) throwNotFoundError('Card')
 
   card.name = args.name
+  card.imageURL = args.imageURL > 0 ? args.imageURL : null
+  card.description = args.description > 0 ? args.description : null
   card.rarity = args.rarity
   card.fragments = args.fragments
   card.command = args.command

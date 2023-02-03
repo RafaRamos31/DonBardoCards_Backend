@@ -23,6 +23,8 @@ export const cardTypes = gql`
   type Card {
     id: ID!
     name: String!
+    imageURL: String
+    description: String
     game: Game!
     rarity: Rarity!
     fragments: Int!
@@ -41,6 +43,8 @@ export const cardTypes = gql`
   extend type Mutation {
     createCard(
       name: String!
+      imageURL: String
+      description: String
       gameId: ID
       rarity: Rarity!
       fragments: Int!
@@ -54,6 +58,8 @@ export const cardTypes = gql`
     updateCard(
       cardId: ID!
       name: String
+      imageURL: String
+      description: String
       gameId: ID
       rarity: Rarity
       fragments: Int

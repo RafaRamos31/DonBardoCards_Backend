@@ -26,7 +26,13 @@ const schema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
-    minlength: 3,
+    minlength: 1,
+  },
+  imageURL: {
+    type: String,
+  },
+  description: {
+    type: String,
   },
   game: {
     type: mongoose.Schema.Types.ObjectId,

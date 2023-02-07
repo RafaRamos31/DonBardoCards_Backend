@@ -76,8 +76,8 @@ export async function createNewCard(args) {
 
   const card = new Card({
     name: args.name,
-    imageURL: args.imageURL > 0 ? args.imageURL : null,
-    description: args.description > 0 ? args.description : null,
+    imageURL: args.imageURL != "" ? args.imageURL : null,
+    description: args.description != "" ? args.description : null,
     game: game,
     rarity: args.rarity,
     fragments: args.fragments,
@@ -117,8 +117,8 @@ export async function updateCard(args) {
   if(!card) throwNotFoundError('Card')
 
   card.name = args.name
-  card.imageURL = args.imageURL > 0 ? args.imageURL : null
-  card.description = args.description > 0 ? args.description : null
+  card.imageURL = args.imageURL != "" ? args.imageURL : null
+  card.description = args.description != "" ? args.description : null
   card.rarity = args.rarity
   card.fragments = args.fragments
   card.command = args.command

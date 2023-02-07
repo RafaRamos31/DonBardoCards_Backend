@@ -14,9 +14,6 @@
 
 ---
 
-**NOTAS VERSION 1.1.0**
+**NOTAS VERSION 1.1.1**
 
-- Se agregó un atributo a las cartas para guardar la URL de una imagen.
-- Se agregó un atributo a las cartas para guardar una descripción.
-
-- Se corrigió una linea de codigo comentada en el proceso de generar recompensas con menos cartas de las deseadas
+- Correccion de error al detectar url o descripciones, ahora los convierte en `null` si vienen vacias.

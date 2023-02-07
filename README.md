@@ -1,6 +1,6 @@
 # Aplicación Backend para sistema de recompensas (cartas) en Twitch
 
-* Version 1.1.0
+* Version 1.2.0
 * Autor: @RafaRamos31
 ---
 ## Tecnologias Utilizadas
@@ -14,6 +14,6 @@
 
 ---
 
-**NOTAS VERSION 1.1.1**
+**NOTAS VERSION 1.2.0**
 
-- Correccion de error al detectar url o descripciones, ahora los convierte en `null` si vienen vacias.
+- Se reubicó la peticion de desencriptar nombre de usuario, ya no se maneja con Express sino que con GraphQL.

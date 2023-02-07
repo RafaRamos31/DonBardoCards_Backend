@@ -4,6 +4,7 @@ import { hashPassword } from "../utilities/registerUtilities.js";
 import { getDateString } from "../utilities/timeUtilities.js";
 import { throwCustomError, throwInvalidArgsError, throwInvalidIDError, throwUserInputError } from "../utilities/errorHandler.js";
 import { getCurrentStatus } from "../controllers/statusController.js";
+import { decrypt } from "../utilities/decoder.js";
 
 /**
  * Return a specific User from the database using the cardId
@@ -121,6 +122,15 @@ export async function loginUser(username, password) {
   return {
     value: jwt.sign(userForToken, process.env.JWT_SECRET),
   };
+}
+
+/**
+ * Provides the decrypted version of the username during the register process
+ * @param {String} usercode the encrypted username
+ * @return {String}      the decrypted username
+ */
+export function getDecryptedUsername(usercode) {
+  return decrypt(usercode);
 }
 
 

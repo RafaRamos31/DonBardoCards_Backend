@@ -1,4 +1,5 @@
 import pkg from 'crypto-js';
+import { throwCustomError } from './errorHandler.js';
 const { enc } = pkg;
 
 /**
@@ -16,5 +17,10 @@ export const encrypt = (text) => {
  * @return {String}      the original value of the string
  */
 export const decrypt = (data) => {
-  return enc.Base64.parse(data).toString(enc.Utf8);
+  try{
+    return enc.Base64.parse(data).toString(enc.Utf8)
+  }
+  catch{
+    (error) => { throwCustomError(error.message)};
+  }
 };

@@ -15,14 +15,6 @@ export function addRestDirections(app) {
     response.status(200).send(`${process.env.FRONTEND_URL}/register/${encrypt(username)}`);
   });
 
-  //GET petition, that transform the register code into the actual Username
-  app.get("/getUsername/:userCode", (request, response) => {
-    response.set('Content-Type', 'text/plain')
-    const userCode = request.params.userCode;
-    response.status(200).send(`${decrypt(userCode)}`);
-  });
-
-
   //GET petition, that generates a new Basic lootbag and returns its Claim Code
   app.get("/freeLoot", async (request, response) => {
     let message = await createChatReward();

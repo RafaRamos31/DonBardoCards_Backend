@@ -45,6 +45,9 @@ const schema = new mongoose.Schema({
         type: String,
         minlength: 5
     },
+    roles: [{
+        type: String
+    }],
     status: {
         type: String,
         required: true,

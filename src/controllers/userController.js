@@ -69,6 +69,7 @@ export async function createNewUser(username, password) {
     username: username,
     passwordHash: hashPassword(password),
     status: "ACTIVE",
+    roles: ["USER"],
     stats: {
       creationDate: getDateString(),
       favoriteCard: null,

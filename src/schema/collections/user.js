@@ -7,6 +7,12 @@ export const userTypes = gql`
     HUSHED
     BANNED
   }
+
+  enum Roles {
+    USER
+    ADMIN
+    ANALYTICS
+  }
   
   type UserCard {
     card: Card!
@@ -25,6 +31,7 @@ export const userTypes = gql`
     id: ID!
     username: String!
     passwordHash: String
+    roles: [Roles]
     status: Status!
     stats: UserStats!
     cards: [UserCard]!

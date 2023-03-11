@@ -21,6 +21,9 @@ const schema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    color: {
+        type: String,
+    },
     totalCards: {
         type: Number,
         required: true,

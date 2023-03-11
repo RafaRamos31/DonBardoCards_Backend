@@ -1,6 +1,6 @@
 # Aplicación Backend para sistema de recompensas (cartas) en Twitch
 
-* Version 1.4.0
+* Version 1.5.0
 * Autor: @RafaRamos31
 ---
 ## Tecnologias Utilizadas
@@ -14,7 +14,6 @@
 
 ---
 
-**NOTAS VERSION 1.4.0**
+**NOTAS VERSION 1.5.0**
 
-- Se agregó la opcion de buscar juegos, cartas y lootbags por su ID.
-- Se eliminó la restriccion de que una carta obligatoriamente tiene un juego.
+- Nuevo atributo para las lootbags, para almacenar un valor correspondiente al color, a utilizar al decorar la lootbag en la pagina web.

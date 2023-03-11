@@ -33,6 +33,7 @@ export async function findLootbagById(lootbagId) {
  * @param {Object} args the paramethers for the lootbag creation
  * @param {String} args.name the name for the lootbag
  * @param {String} args.description a descriptive text to explain the qualities of the lootbag
+ * @param {String} args.color a hexadecimal code saved for decorative purposes of the lootbag
  * @param {Number} args.totalCards the total amount of cards that can be obtained from the lootbag
  * @param {String} args.fixedGameId makes the lootbag to give cards only from the selected game
  * @param {FixedCard[]} args.fixedCards a set of preferences to get specific cards from the lootbag
@@ -51,6 +52,7 @@ export async function createNewLootbag(args) {
   const lootBag = new LootBag({
     name: args.name,
     description: args.description,
+    color: args.color,
     totalCards: args.totalCards,
     channelPoints: args.channelPoints,
     bits: args.bits,
@@ -67,6 +69,7 @@ export async function createNewLootbag(args) {
  * @param {String} args.id the id of the Lootbag object to modify
  * @param {String} args.name the name for the lootbag
  * @param {String} args.description a descriptive text to explain the qualities of the lootbag
+ * @param {String} args.color a hexadecimal code saved for decorative purposes of the lootbag
  * @param {Number} args.totalCards the total amount of cards that can be obtained from the lootbag
  * @param {String} args.fixedGameId makes the lootbag to give cards only from the selected game
  * @param {FixedCard[]} args.fixedCards a set of preferences to get specific cards from the lootbag
@@ -81,6 +84,7 @@ export async function updateLootbag(args) {
 
   lootBag.name = args.name
   lootBag.description = args.description
+  lootBag.color = args.color
   lootBag.totalCards = args.totalCards
   lootBag.channelPoints = args.channelPoints
   lootBag.bits = args.bits

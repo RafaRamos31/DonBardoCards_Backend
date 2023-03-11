@@ -16,6 +16,7 @@ export const lootBagTypes = gql`
     id: ID!
     name: String!
     description: String!
+    color: String
     totalCards: Int!
     fixedGame: Game
     fixedCards: [FixedCard]
@@ -33,6 +34,7 @@ export const lootBagTypes = gql`
     createLootBag(
       name: String!
       description: String!
+      color: String
       totalCards: Int!
       fixedGameId: ID
       fixedCards: [FixedCardInput]
@@ -43,6 +45,7 @@ export const lootBagTypes = gql`
       id: ID!
       name: String
       description: String
+      color: String
       totalCards: Int
       fixedGameId: ID
       fixedCards: [FixedCardInput]

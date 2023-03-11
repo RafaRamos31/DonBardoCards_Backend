@@ -1,5 +1,5 @@
 import { gql } from "apollo-server";
-import { createNewCard, deleteCard, findCards, getAllCards, updateCard, useCards } from "../../controllers/cardController.js";
+import { createNewCard, deleteCard, findCards, getAllCards, updateCard, useCards, findCardById } from "../../controllers/cardController.js";
 
 export const cardTypes = gql`
   enum Rarity {
@@ -25,7 +25,7 @@ export const cardTypes = gql`
     name: String!
     imageURL: String
     description: String
-    game: Game!
+    game: Game
     rarity: Rarity!
     fragments: Int!
     command: String!
@@ -37,6 +37,7 @@ export const cardTypes = gql`
 
   extend type Query {
     allCards: [Card]!
+    getCardById(cardId: String!): Card 
     findCards(gameId: String, rarity: Rarity, query: String): [Card]!
   }
 
@@ -78,6 +79,7 @@ export const cardTypes = gql`
 export const cardResolvers = {
   Query: {
     allCards: async () => getAllCards(),
+    getCardById: async (root, args) => findCardById(args.cardId),
     findCards: async (root, args) => findCards(args.gameId, args.rarity, args.query),
   },
   Mutation: {

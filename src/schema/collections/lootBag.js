@@ -1,5 +1,5 @@
 import { gql } from "apollo-server";
-import { createNewLootbag, deleteLootBag, getAllLootbags, updateLootbag } from "../../controllers/lootbagController.js";
+import { createNewLootbag, deleteLootBag, findLootbagById, getAllLootbags, updateLootbag } from "../../controllers/lootbagController.js";
 
 export const lootBagTypes = gql`
   type FixedCard {
@@ -26,6 +26,7 @@ export const lootBagTypes = gql`
 
   extend type Query {
     allLootBags: [LootBag]!
+    getLootBagById(lootbagId: String!): LootBag
   }
 
   extend type Mutation {
@@ -55,6 +56,7 @@ export const lootBagTypes = gql`
 export const lootBagResolvers = {
   Query: {
     allLootBags: async () => getAllLootbags(),
+    getLootBagById: async (root, args) => findLootbagById(args.lootbagId)
   },
   Mutation: {
     createLootBag: async (root, args) => createNewLootbag({...args}),

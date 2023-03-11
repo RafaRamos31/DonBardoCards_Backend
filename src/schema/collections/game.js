@@ -1,5 +1,5 @@
 import { gql } from "apollo-server";
-import { getAllGames, createNewGame, updateGame, deleteGame } from "../../controllers/gameController.js";
+import { getAllGames, createNewGame, updateGame, deleteGame, findGameById } from "../../controllers/gameController.js";
 
 export const gameTypes = gql`
   type Game {
@@ -10,6 +10,7 @@ export const gameTypes = gql`
 
   extend type Query {
     allGames: [Game]!
+    getGameById(gameId: String!): Game
   }
 
   extend type Mutation {
@@ -22,6 +23,7 @@ export const gameTypes = gql`
 export const gameResolvers = {
   Query: {
     allGames: async () => getAllGames(),
+    getGameById: async (root, args) => findGameById(args.gameId)
   },
   Mutation: {
     createGame: (root, args) => createNewGame(args.name, args.iconURL),

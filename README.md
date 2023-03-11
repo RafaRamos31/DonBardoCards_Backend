@@ -1,6 +1,6 @@
 # Aplicación Backend para sistema de recompensas (cartas) en Twitch
 
-* Version 1.3.0
+* Version 1.4.0
 * Autor: @RafaRamos31
 ---
 ## Tecnologias Utilizadas
@@ -14,6 +14,7 @@
 
 ---
 
-**NOTAS VERSION 1.3.0**
+**NOTAS VERSION 1.4.0**
 
-- Se agregó el parametro de roles a los usuario, para identificar permisos especiales de Usuario, Administrador o Análisis.
+- Se agregó la opcion de buscar juegos, cartas y lootbags por su ID.
+- Se eliminó la restriccion de que una carta obligatoriamente tiene un juego.
